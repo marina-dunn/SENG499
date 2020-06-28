@@ -1,5 +1,6 @@
 # SENG499
 The repository to hold the code for the SENG 499 Capstone Project.
+https://github.com/marina-dunn/SENG499
 
 face-recognition installation:
 -Python3
