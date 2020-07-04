@@ -11,11 +11,11 @@ face_landmarks_list = face_recognition.face_landmarks(image)
 
 print("I found {} face(s) in this photograph.".format(len(face_landmarks_list)))
 
-with open('data.csv','w') as file:
+with open('poc_data.csv','w') as file:
     for face_landmarks in face_landmarks_list:
         # Print the location of each facial feature in this image
         for facial_feature in face_landmarks.keys():
-            file.write("{}".format(facial_feature))
+            file.write("1,{}".format(facial_feature))
             
             ref_x = face_landmarks[facial_feature][0][0]
             ref_y = face_landmarks[facial_feature][0][1]

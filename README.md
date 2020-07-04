@@ -36,3 +36,18 @@ Potential libraries for machine learning:
 -scipy 
 -matplotlib 
 -pandas
+
+face_test.py
+-sample code for face-recognition, outlines facial features of given image
+
+proc_face.py
+-given single image outputs csv with processed data points
+
+gen_test_data.py
+-given a directory of face images outputs proccessed data points for each
+
+Processed data format:
+sample number, facial feature, x:y, x:y, ...
+
+Processed data points are currently relative to first data point (x0 - x:y0 - y). Some ideas for other point references, center of cluster (k-means), mean point.
+Could also repfresent points at distance angle from a mean point (could perhaps identify convex or concave curve of mouth)
