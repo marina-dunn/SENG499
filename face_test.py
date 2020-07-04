@@ -1,8 +1,11 @@
 from PIL import Image, ImageDraw
 import face_recognition
+import sys
+
+filename = sys.argv[1]
 
 # Load the jpg file into a numpy array
-image = face_recognition.load_image_file("./media/two_people.jpg")
+image = face_recognition.load_image_file(filename)
 
 # Find all facial features in all the faces in the image
 face_landmarks_list = face_recognition.face_landmarks(image)
