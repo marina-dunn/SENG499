@@ -25,17 +25,31 @@ host = socket.gethostname()
 # vs = VideoStream(usePiCamera=True).start()
 vs = VideoStream(src=0).start()
 time.sleep(2.0) # Let camera warm up
+
+start = time.time()
+frame_count = 0
  
 while True:
 	# read the frame from the camera and send it to the server
   frame = vs.read()
   if vs.grabbed:
-    cv2.imshow('original',frame)
     # frame = imutils.resize(frame, width=320) # Resize frame if needed
     reply = sender.send_image(host, frame)
+    frame_count = frame_count+1
     (h, w) = frame.shape[:2]
     if reply:
       data = msgpack.unpackb(reply)
+      elapsed_time = time.time() - start
+      fps = frame_count/elapsed_time
+      cv2.putText(frame, f'FPS: {fps}', (10, 10),
+        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0), 2)
+      cv2.putText(frame, f'Time: {elapsed_time}', (10, 25),
+        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0), 2)
+      cv2.putText(frame, f'Frames: {frame_count}', (10, 40),
+        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0), 2)
+      cv2.putText(frame, f'found {len(data)} faces', (10, h - 20),
+        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0), 2)
+          
       cv2.putText(frame, f'found {len(data)} faces', (10, h - 20),
 		    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0), 2)
       

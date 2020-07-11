@@ -5,6 +5,7 @@ import logging
 import os
 import ssl
 import uuid
+import time
 
 import numpy as np
 import msgpack
@@ -13,6 +14,7 @@ import imagezmq
 import cv2
 from aiohttp import web
 from av import VideoFrame
+import imutils
 
 from aiortc import MediaStreamTrack, RTCPeerConnection, RTCSessionDescription
 from aiortc.contrib.media import MediaBlackhole, MediaPlayer, MediaRecorder
@@ -21,7 +23,6 @@ ROOT = os.path.dirname(__file__)
 
 logger = logging.getLogger("pc")
 pcs = set()
-
 
 class VideoTransformTrack(MediaStreamTrack):
     """
@@ -34,40 +35,50 @@ class VideoTransformTrack(MediaStreamTrack):
         super().__init__()  # don't forget this!
         self.track = track
         self.transform = transform
+        self.frame_count = 0
 
     async def recv(self):
         track_frame = await self.track.recv() # Need to thread this out and only do latest image
+        if self.frame_count == 0:
+            self.start = time.time()
+        self.frame_count = self.frame_count+1
         frame = track_frame.to_ndarray(format="bgr24")
-        
-        # return track_frame
         # frame = imutils.resize(frame, width=320) # Resize frame if needed
-        reply = sender.send_image(socket.gethostname(), frame)
-        return track_frame
-        # (h, w) = frame.shape[:2]
-        # if reply:
-        #   data = msgpack.unpackb(reply)
-        #   cv2.putText(frame, f'found {len(data)} faces', (10, h - 20),
-        #     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0), 2)
+        # reply = sender.send_image(socket.gethostname(), frame)
+        # return track_frame
+        (h, w) = frame.shape[:2]
+        if True:
+          data = []
+          elapsed_time = time.time() - self.start
+          fps = self.frame_count/elapsed_time
+          cv2.putText(frame, f'FPS: {fps}', (10, 10),
+            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0), 2)
+          cv2.putText(frame, f'Time: {elapsed_time}', (10, 25),
+            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0), 2)
+          cv2.putText(frame, f'Frames: {self.frame_count}', (10, 40),
+            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0), 2)
+          cv2.putText(frame, f'found {len(data)} faces', (10, h - 20),
+            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0), 2)
           
-        #   keypoints = []
-        #   for face in data:
-        #     for facial_feature in face['features']:
-        #       keypoints.extend([cv2.KeyPoint(x[0], x[1], 4) for x in face['features'][facial_feature]])
+          keypoints = []
+          for face in data:
+            for facial_feature in face['features']:
+              keypoints.extend([cv2.KeyPoint(x[0], x[1], 4) for x in face['features'][facial_feature]])
           
         #   if len(keypoints) == 0: 
         #     return track_frame
-        #   im_with_keypoints = cv2.drawKeypoints(frame,
-        #                                           keypoints,
-        #                                           np.array([]),
-        #                                           (0, 0, 255),
-        #                                           cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-        #   # rebuild a VideoFrame, preserving timing information
-        #   new_frame = VideoFrame.from_ndarray(im_with_keypoints, format="bgr24")
-        #   new_frame.pts = track_frame.pts
-        #   new_frame.time_base = track_frame.time_base
-        #   return new_frame
-        # else :
-        #   return track_frame
+          im_with_keypoints = cv2.drawKeypoints(frame,
+                                                  keypoints,
+                                                  np.array([]),
+                                                  (0, 0, 255),
+                                                  cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+          # rebuild a VideoFrame, preserving timing information
+          new_frame = VideoFrame.from_ndarray(im_with_keypoints, format="bgr24")
+          new_frame.pts = track_frame.pts
+          new_frame.time_base = track_frame.time_base
+          return new_frame
+        else :
+          return track_frame
 
         # if self.transform == "cartoon":
         #     img = frame.to_ndarray(format="bgr24")
