@@ -49,5 +49,12 @@ gen_test_data.py
 Processed data format:
 sample number, facial feature, x:y, x:y, ...
 
+Classified Images (/media/identified_gestures/)
+Classes: Smiles, Neutral, Frown, Other
+
+Other - gestures that do not fit into any category or have some object obscuring the face
+
+First pass, good selection of smiles and neutral. May need more frowning samples. Often neutral class can contain some abiguity so should be passed over again.
+
 Processed data points are currently relative to first data point (x0 - x:y0 - y). Some ideas for other point references, center of cluster (k-means), mean point.
 Could also repfresent points at distance angle from a mean point (could perhaps identify convex or concave curve of mouth)
