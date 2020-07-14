@@ -5,7 +5,7 @@ import glob
 
 with open('data.csv','w') as file:
     face_num = 0;
-    for filename in glob.glob('media/real_and_fake_face/training_real/*.jpg'):
+    for filename in glob.glob('media/identified_gestures/smile/*.jpg'):
 
         # Load the jpg file into a numpy array
         image = face_recognition.load_image_file(filename)
