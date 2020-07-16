@@ -1,0 +1,14 @@
+                    max_x = face_landmarks[facial_feature][0][0]
+                    min_x = max_x
+                    max_y = face_landmarks[facial_feature][0][1]
+                    min_y = max_y
+                    
+                    for points in face_landmarks[facial_feature]:
+                        if(max_x < points[0]): max_x = points[0]
+                        elif(min_x > points[0]): min_x = points[0]
+                        
+                        if(max_y < points[1]): max_y = points[1]
+                        elif(min_y > points[1]): min_y = points[1]
+                        
+                    for points in face_landmarks[facial_feature]:
+                        file.write(",{},{}".format( (points[0]-min_x)/(max_x-min_x), (points[1]-min_y)/(max_y-min_y)))
