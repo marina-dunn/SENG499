@@ -4,8 +4,13 @@ from PIL import Image
 import glob
 
 gesture = sys.argv[1]
+label = 0
 
-with open('{}.csv'.format(gesture),'w') as file:
+if(gesture == 'smile'): label = 0
+elif(gesture == 'neutral'): label = 1
+elif(gesture == 'frown'): label = 2
+
+with open('./datasets/{}.csv'.format(gesture),'w') as file:
     for filename in glob.glob('media/identified_gestures/{}/*.jpg'.format(gesture)):
 
         # Load the jpg file into a numpy array
@@ -17,7 +22,7 @@ with open('{}.csv'.format(gesture),'w') as file:
         print("I found {} face(s) in this photograph.".format(len(face_landmarks_list)))
 
         for face_landmarks in face_landmarks_list:
-            file.write("{}".format(gesture))
+            file.write("{}".format(label))
             for facial_feature in face_landmarks.keys():
                 
                 if(facial_feature == 'top_lip' or facial_feature == 'bottom_lip'):
