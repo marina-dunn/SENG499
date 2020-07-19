@@ -2,6 +2,7 @@ import face_recognition
 import sys
 from PIL import Image
 import glob
+from pathlib import Path
 
 gesture = sys.argv[1]
 label = 0
@@ -10,9 +11,10 @@ if(gesture == 'smile'): label = 0
 elif(gesture == 'neutral'): label = 1
 elif(gesture == 'frown'): label = 2
 
-with open('./datasets/{}.csv'.format(gesture),'w') as file:
-    for filename in glob.glob('media/identified_gestures/{}/*.jpg'.format(gesture)):
+Path("output/datasets/").mkdir(parents=True, exist_ok=True)
 
+with open('output/datasets/{}.csv'.format(gesture),'w') as file:
+    for filename in glob.glob('media/identified_gestures/{}/*.jpg'.format(gesture)):
         # Load the jpg file into a numpy array
         image = face_recognition.load_image_file(filename)
 
