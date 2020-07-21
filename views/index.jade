@@ -1,5 +1,29 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  #wrapper
+    h1#title= title
+    #image-display
+    if(input_type == 'video')
+      video(autoplay = 'true')
+    else
+      img(url= '/images/nothing.png')
+    div#res
+      p#restitle Result
+      p#result= result
+    div
+      table#tb
+        th Please select a method of image input:
+        tr
+          td
+            input(type='radio' id='image' name='input_type' value='image' checked) 
+            label(for='image') Upload an Image
+          td
+            if (input_type == 'video')
+              button#select-video Connect Webcam
+            else
+              input#fileupload(type='file', name='image', data-url='/upload', accept='image/png, image/jpeg')
+        tr
+          td
+            input(type='radio' id='video' name='input_type' value='video') 
+            label(for='video') Connect to Webcam
