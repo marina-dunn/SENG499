@@ -10,8 +10,8 @@ if(gesture == 'smile'): label = 0
 elif(gesture == 'neutral'): label = 1
 elif(gesture == 'frown'): label = 2
 
-with open('./datasets/{}_norm.csv'.format(gesture),'w') as file:
-    for filename in glob.glob('media/identified_gestures/{}/*.jpg'.format(gesture)):
+with open('./datasets/{}_low_res_gestures.csv'.format(gesture),'w') as file:
+    for filename in glob.glob('media/low_res/{}/*'.format(gesture)):
 
         # Load the jpg file into a numpy array
         image = face_recognition.load_image_file(filename)
