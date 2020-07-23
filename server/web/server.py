@@ -44,7 +44,7 @@ class VideoTransformTrack(MediaStreamTrack):
         self.frame_count = self.frame_count+1
         frame = track_frame.to_ndarray(format="bgr24")
         # frame = imutils.resize(frame, width=320) # Resize frame if needed
-        # reply = sender.send_image(socket.gethostname(), frame)
+        reply = sender.send_image(socket.gethostname(), frame)
         # return track_frame
         (h, w) = frame.shape[:2]
         if True:
@@ -236,7 +236,7 @@ if __name__ == "__main__":
 
     # initialize the ImageSender object with the socket address of the
     # server
-    sender = imagezmq.ImageSender(connect_to=f'tcp://{args.server_ip}:40005')
+    sender = imagezmq.ImageSender(connect_to=f'tcp://{args.server_ip}:40000')
 
     if args.verbose:
         logging.basicConfig(level=logging.DEBUG)

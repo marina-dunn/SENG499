@@ -1,22 +1,13 @@
 version: '3.8'
 
 services:
-  facial_gesture_recognition:
-    image: facial_gesture_recognition
-    container_name: facial_gesture_recognition
-    working_dir: /root/facial_gesture_recognition
-    build: ./server
+  facial_features:
+    image: facial_features
+    container_name: facial_features
+    working_dir: /root/facial_features
+    build: ./server/facial_features
     ports: 
-      - "40005:40005"
-    command: python3 -u server.py
-    volumes:
-      - ./output:/root/facial_gesture_recognition/output
-      - ./media:/root/facial_gesture_recognition/media
+      - "40000:40000"
+    command: python3 -u server.py -p 40000
 
-  # client:
-  #   image: 
-  #   container_name: client
-  #   build: ./client
-  #   devices:
-  #     - /dev/video0:/dev/video0
     

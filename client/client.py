@@ -12,12 +12,14 @@ import numpy as np
 ap = argparse.ArgumentParser()
 ap.add_argument("-s", "--server-ip", required=True,
   help="ip address of the server to which the client will connect")
+ap.add_argument("-p", "--server-port", required=True,
+  help="port of the server to which the client will connect")
 args = vars(ap.parse_args())
 
 # initialize the ImageSender object with the socket address of the
 # server
-sender = imagezmq.ImageSender(connect_to="tcp://{}:40005".format(
-  args["server_ip"]))
+sender = imagezmq.ImageSender(connect_to=f'tcp://{args["server_ip"]}:{args["server_port"]}')
+print("ImageSender connected")
 
 # get the host name, initialize the video stream, and allow the
 # camera sensor to warmup
@@ -49,10 +51,7 @@ while True:
         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0), 2)
       cv2.putText(frame, f'found {len(data)} faces', (10, h - 20),
         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0), 2)
-          
-      cv2.putText(frame, f'found {len(data)} faces', (10, h - 20),
-		    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0), 2)
-      
+                
       keypoints = []
       for face in data:
         for facial_feature in face['features']:
@@ -63,7 +62,7 @@ while True:
                                               np.array([]),
                                               (0, 0, 255),
                                               cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-      cv2.imshow('modified',im_with_keypoints)
+      cv2.imshow('Client',im_with_keypoints)
   if cv2.waitKey(1) & 0xFF == ord('q'):
     break
   

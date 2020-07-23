@@ -9,9 +9,14 @@ import cv2
 import face_recognition
 import msgpack
 
-print("Server Starting")
+ap = argparse.ArgumentParser()
+ap.add_argument("-p", "--port", required=True,
+  help="Port for the server to which the client will connect")
+args = vars(ap.parse_args())
+
+print(f'Server Starting on port: {args["port"]}')
 # initialize the ImageHub object
-imageHub = imagezmq.ImageHub(open_port='tcp://*:40005')
+imageHub = imagezmq.ImageHub(open_port=f'tcp://*:{args["port"]}')
 print("ImageHub connected")
 
 frameDict = {}
@@ -34,10 +39,10 @@ while True:
   # receive RPi name and frame from the RPi and acknowledge
   # the receipt
   (client, frame) = imageHub.recv_image()
-  print("Frame received")
+  # print("Frame received")
   face_landmarks_list = face_recognition.face_landmarks(frame)
   data = []
-  print(f"I found {len(face_landmarks_list)} face(s) in this photograph.")
+  # print(f"I found {len(face_landmarks_list)} face(s) in this photograph.")
 
   for face_landmarks in face_landmarks_list:
     face = {
