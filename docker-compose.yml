@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  facial_features:
+    image: facial_features
+    container_name: facial_features
+    working_dir: /root/facial_features
+    build: ./server/facial_features
+    ports: 
+      - "40000:40000"
+    command: python3 -u server.py -p 40000
+    
+  web_server:
+    image: web_server
+    container_name: web_server
+    working_dir: /root/web
+    build: ./web
+    ports: 
+      - "3000:3000"
+    command:  /bin/sh -c "/root/web/entrypoint.sh"
+
+    

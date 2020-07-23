@@ -10,12 +10,16 @@ block content
     if(input_type == 'video')
       video(autoplay = 'true')
     else if locals.photo
-      img(src='data:image/jpeg;base64,#{photo}').image-display
+      img(src='data:image/jpeg;base64,#{photo}' id="photo").image-display
     else
       .image-display
     div#res
       p#restitle Result
-      p#result= result
+      -if (result)
+        p#result You are #{result}
+      -else
+        p#result #{error}
+      
     div
       table#tb
         th Please select a method of image input:
@@ -27,6 +31,7 @@ block content
             if (input_type == 'video')
               button#select-video Connect Webcam
             else
+              //- input#fileUpload(type="file" name="photo" accept='image/*')
               form#fileUpload(method='POST' action='/' enctype='multipart/form-data')
                 label(for='payload') Select a photo to upload:
                 input#payload(type='file' name='photo' accept='image/*')
@@ -36,6 +41,3 @@ block content
           td
             input(type='radio' id='video' name='input_type' value='video') 
             label(for='video') Connect to Webcam
-    div#res
-      p#restitle Result
-      p#result You are #{result}
