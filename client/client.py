@@ -18,7 +18,7 @@ args = vars(ap.parse_args())
 
 # initialize the ImageSender object with the socket address of the
 # server
-sender = imagezmq.ImageSender(connect_to=f'tcp://{args["server_ip"]}:{args["server_port"]}')
+sender = imagezmq.ImageSender(connect_to=f'tcp://{args["server_port"]}:{args["server_port"]}')
 print("ImageSender connected")
 
 # get the host name, initialize the video stream, and allow the
@@ -35,12 +35,15 @@ while True:
 	# read the frame from the camera and send it to the server
   frame = vs.read()
   if vs.grabbed:
+    print(f"Dtype: {frame.dtype}")
+    print(f"Shape: {frame.shape}")
     # frame = imutils.resize(frame, width=320) # Resize frame if needed
     reply = sender.send_image(host, frame)
     frame_count = frame_count+1
     (h, w) = frame.shape[:2]
     if reply:
-      data = msgpack.unpackb(reply)
+      reply = msgpack.unpackb(reply)
+      data = reply['faces']
       elapsed_time = time.time() - start
       fps = frame_count/elapsed_time
       cv2.putText(frame, f'FPS: {fps}', (10, 10),
@@ -49,8 +52,13 @@ while True:
         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0), 2)
       cv2.putText(frame, f'Frames: {frame_count}', (10, 40),
         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0), 2)
-      cv2.putText(frame, f'found {len(data)} faces', (10, h - 20),
-        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0), 2)
+      if len(reply['error']) > 0:
+        cv2.putText(frame, reply['error'], (10, h - 20),
+          cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0), 2)
+      else:
+        cv2.putText(frame, f'found {len(data)} faces', (10, h - 20),
+          cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0), 2)
+      
                 
       keypoints = []
       for face in data:

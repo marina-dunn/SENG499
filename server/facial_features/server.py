@@ -39,27 +39,40 @@ while True:
   # receive RPi name and frame from the RPi and acknowledge
   # the receipt
   (client, frame) = imageHub.recv_image()
-  # print("Frame received")
-  face_landmarks_list = face_recognition.face_landmarks(frame)
-  data = []
-  # print(f"I found {len(face_landmarks_list)} face(s) in this photograph.")
-
-  for face_landmarks in face_landmarks_list:
-    face = {
-      'features': {}
-    }
-    for facial_feature in face_landmarks.keys():
-      if(facial_feature == 'top_lip' or facial_feature == 'bottom_lip'):
-        face['features'][facial_feature] = face_landmarks[facial_feature]
-        # for points in face_landmarks[facial_feature]:
-        #   output = f"{output}\n {points[0]},{points[1]}\n"
-    data.append(face)
-
-  imageHub.send_reply(msgpack.packb(data))
+  
   # if a device is not in the last active dictionary then it means
   # that its a newly connected device
   if client not in lastActive.keys():
     print("[INFO] receiving data from {}...".format(client))
+
+  print("Frame received")
+
+  data = {
+    'faces': [],
+    'error': ''
+  }
+
+  try:
+    face_landmarks_list = face_recognition.face_landmarks(frame)
+    # print(f"I found {len(face_landmarks_list)} face(s) in this photograph.")
+
+    for face_landmarks in face_landmarks_list:
+      face = {
+        'features': {},
+        'result': ''
+      }
+      for facial_feature in face_landmarks.keys():
+        if(facial_feature == 'top_lip' or facial_feature == 'bottom_lip'):
+          face['features'][facial_feature] = face_landmarks[facial_feature]
+          # for points in face_landmarks[facial_feature]:
+          #   output = f"{output}\n {points[0]},{points[1]}\n"
+          face['result'] = 'Doing something'
+      data['faces'].append(face)
+  except Exception as e:
+    print(f'An exception occurred: {e}')
+    data['error'] = 'Unable to process image'
+
+  imageHub.send_reply(msgpack.packb(data))
   # record the last active time for the device from which we just
   # received a frame
   lastActive[client] = datetime.now()
