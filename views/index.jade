@@ -1,17 +1,19 @@
 extends layout
 
+head
+  title= title
+  script(src="https://code.jquery.com/jquery-3.5.1.min.js")
+  script(src="../public/javascript/fileupload.js")
 block content
   #wrapper
     h1#title= title
-    #image-display
-    if(input_type == 'video')
-      video(autoplay = 'true')
-    else
-      img(url= '/images/nothing.png')
-    div#res
-      p#restitle Result
-      p#result= result
-    div
+    form(method="post" action="" enctype="multipart/form-data" id="upload-form")
+      .preview
+        if(input_type == 'video')
+          video(autoplay = 'true')
+        else
+          img(src="" id="img" width="500" height="375")
+      div
       table#tb
         th Please select a method of image input:
         tr
@@ -22,8 +24,12 @@ block content
             if (input_type == 'video')
               button#select-video Connect Webcam
             else
-              input#fileupload(type='file', name='image', data-url='/upload', accept='image/png, image/jpeg')
+              input#file(type='file', name='file', data-url='/upload', accept='image/png, image/jpeg')
+              input#submit.button(type="button" value="Upload")
         tr
           td
             input(type='radio' id='video' name='input_type' value='video') 
             label(for='video') Connect to Webcam
+    div#res
+      p#restitle Result
+      p#result You are #{result}

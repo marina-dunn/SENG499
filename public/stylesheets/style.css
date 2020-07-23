@@ -19,7 +19,7 @@ body {
   text-align: center;
 }
 
-#image-display{
+#img{
   margin-left: auto;
   margin-right: auto;
 	width: 500px;
@@ -30,6 +30,26 @@ body {
 
 a {
   color: #00B7FF;
+}
+
+.preview{
+	width: 500px;
+	height: 375px;
+  border: 1px solid black;
+  margin: 0 auto;
+  background: white;
+}
+
+.preview img{
+  display: none;
+}
+/* Button */
+.button{
+  border: 0px;
+  background-color: deepskyblue;
+  color: white;
+  padding: 5px 15px;
+  margin-left: 10px;
 }
 
 #result{
