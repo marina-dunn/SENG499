@@ -1,4 +1,0 @@
-opencv-contrib-python
-aiohttp
-aiortc
-av
