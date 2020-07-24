@@ -18,7 +18,7 @@ args = vars(ap.parse_args())
 
 # initialize the ImageSender object with the socket address of the
 # server
-sender = imagezmq.ImageSender(connect_to=f'tcp://{args["server_port"]}:{args["server_port"]}')
+sender = imagezmq.ImageSender(connect_to=f'tcp://{args["server_ip"]}:{args["server_port"]}')
 print("ImageSender connected")
 
 # get the host name, initialize the video stream, and allow the
@@ -35,8 +35,6 @@ while True:
 	# read the frame from the camera and send it to the server
   frame = vs.read()
   if vs.grabbed:
-    print(f"Dtype: {frame.dtype}")
-    print(f"Shape: {frame.shape}")
     # frame = imutils.resize(frame, width=320) # Resize frame if needed
     reply = sender.send_image(host, frame)
     frame_count = frame_count+1
@@ -58,6 +56,9 @@ while True:
       else:
         cv2.putText(frame, f'found {len(data)} faces', (10, h - 20),
           cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0), 2)
+        if len(data) > 0:
+          cv2.putText(frame, f'You are {data[0]["result"]}', (10, h - 35),
+            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0), 2)
       
                 
       keypoints = []

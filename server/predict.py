@@ -1,23 +1,12 @@
-# import the necessary packages
-from imutils import build_montages
-from datetime import datetime
-from time import time
-from itertools import chain
 import numpy as np
-import imagezmq
-import argparse
-import imutils
-import cv2
-import face_recognition
-import msgpack
-
+from time import time
 import logging
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
-# from scipy.cluster.hierarchy import dendrogram
+from scipy.cluster.hierarchy import dendrogram
 
 from sklearn.pipeline import make_pipeline
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split]
 from sklearn.svm import SVC
 from sklearn.preprocessing import StandardScaler
 from sklearn import preprocessing
@@ -25,16 +14,9 @@ from sklearn import metrics
 
 from numpy import genfromtxt
 
-ap = argparse.ArgumentParser()
-ap.add_argument("-p", "--port", required=True,
-  help="Port for the server to which the client will connect")
-args = vars(ap.parse_args())
-
-gesture = ['Smiling', 'Neutral', 'Frowning']
-
-smile = genfromtxt('./datasets/smile.csv', delimiter=',')
-neutral = genfromtxt('./datasets/neutral.csv', delimiter=',')
-frown = genfromtxt('./datasets/frown.csv', delimiter=',')
+smile = genfromtxt('../datasets/smile.csv', delimiter=',')
+neutral = genfromtxt('../datasets/neutral.csv', delimiter=',')
+frown = genfromtxt('../datasets/frown.csv', delimiter=',')
 
 raw_data = np.concatenate((smile,neutral,frown))
 
@@ -47,14 +29,13 @@ clf = make_pipeline(StandardScaler(), SVC(gamma='auto'))
 clf.fit(X_train, y_train)
 
 #print test results
-y_pred = clf.predict(X_test)
 print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_pred))
 print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_pred))
 print(clf.score(X_test,y_test))
 
 
 def predict(keypoints):
-  return clf.predict([keypoints])
+  clf.predict([keypoints])
 
 def start_server():
   print(f'Server Starting on port: {args["port"]}')
@@ -104,16 +85,12 @@ def start_server():
           'features': {},
           'result': ''
         }
-        keypoints = list()
         for facial_feature in face_landmarks.keys():
           if(facial_feature == 'top_lip' or facial_feature == 'bottom_lip'):
             face['features'][facial_feature] = face_landmarks[facial_feature]
-            
-            keypoints.extend(list(chain.from_iterable((x[0], x[1]) for x in  face_landmarks[facial_feature])))
-        print(keypoints)
-        prediction = predict(keypoints) 
-
-        face['result'] = gesture[int(prediction)]
+            # for points in face_landmarks[facial_feature]:
+            #   output = f"{output}\n {points[0]},{points[1]}\n"
+            face['result'] = 'Doing something'
         data['faces'].append(face)
     except Exception as e:
       print(f'An exception occurred: {e}')
