@@ -57,8 +57,13 @@ while True:
         cv2.putText(frame, f'found {len(data)} faces', (10, h - 20),
           cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0), 2)
         if len(data) > 0:
-          cv2.putText(frame, f'You are {data[0]["result"]}', (10, h - 35),
-            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0), 2)
+          result = data[0]["result"]
+          if result.startswith('Error') or result.startswith('Training'):
+            cv2.putText(frame, result, (10, h - 35),
+              cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0), 2)
+          else:
+            cv2.putText(frame, f'You are {result}', (10, h - 35),
+              cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0), 2)
       
                 
       keypoints = []

@@ -1,2 +1,2 @@
 #!/bin/bash
-python3 -u server.py -p 40000
+python3 -u server.py "$@"

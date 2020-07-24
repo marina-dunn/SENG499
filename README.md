@@ -78,3 +78,12 @@ docker-compose up
 
 To build and run the server suite in one go
 docker-compose up --build
+
+Launch server in gathering mode, connect client and be smiling/frowning
+docker-compose run --service-ports facial_features -s 127.0.0.1 -p 40000 -g {ACTION}
+{ACTION} is either 0, 1, or 2
+
+Image trainer can be used with prepared images while server is in gather mode and also for confirmation
+python image_trainer.py -s 127.0.0.1 -p 40000 -a {ACTION}
+{ACTION} is either 0, 1, or 2 same as server
+The script can be edited to look at different folders
