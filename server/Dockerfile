@@ -2,3 +2,7 @@
 
 FROM server_base
 COPY . /root/facial_features
+
+WORKDIR /root/facial_features
+
+ENTRYPOINT ["/bin/sh" ,"./docker-entrypoint.sh"]
