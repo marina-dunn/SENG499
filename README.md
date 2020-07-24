@@ -61,12 +61,20 @@ Could also repfresent points at distance angle from a mean point (could perhaps 
 
 
 # Docker
-docker compose can be used to launch the application
-There are 2 volumes that are used for the application: input and output
-These volumes allow the container to be run for testing without needing to rebuild it
+Docker compose has been setup to run the facial and gesture recognition server as well as the webserver
+The facial and gesture recognition server is setup to build off a server_base image which contains the built dlib library and other requirements
 
-1) Put files you want to analyze in the input folder
-2) Run docker-compose up
-3) Resulting data.csv file is put in output folder
+Run the following command to build the server_base image
+Windows: build_base.bat
+Linux: ./build_base.sh
 
-When code is changed used docker-compose up --build
+Once the base image has been created it will not need to be recreated unless the dlib library or other requirements have updated/changed
+
+To build the server suite
+docker-compose build
+
+To run the server suite
+docker-compose up
+
+To build and run the server suite in one go
+docker-compose up --build

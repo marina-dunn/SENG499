@@ -36,5 +36,3 @@ COPY requirements.txt /root/requirements.txt
 RUN cd /root/ && \
     pip3 install -r requirements.txt
     # python3 setup.py install
-
-# CMD ["gen_test_data.py"]

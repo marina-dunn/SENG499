@@ -81,5 +81,5 @@ if __name__ == '__main__':
     # This is an internal service only
     ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
     ssl_context.check_hostname = False
-    ssl_context.load_cert_chain('localhost.crt', 'localhost_decrypted.key')
+    ssl_context.load_cert_chain('seng499-selfsigned.crt', 'seng499-selfsigned.key')
     run_simple('127.0.0.1', 4000, application, ssl_context=ssl_context, threaded=True)
