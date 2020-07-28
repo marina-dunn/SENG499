@@ -2,16 +2,19 @@ import face_recognition
 import sys
 from PIL import Image
 import glob
+import time 
 
 gesture = sys.argv[1]
 label = 0
+
+start = time.time()
 
 if(gesture == 'smile'): label = 0
 elif(gesture == 'neutral'): label = 1
 elif(gesture == 'frown'): label = 2
 
 with open('./datasets/{}_low_res_gestures.csv'.format(gesture),'w') as file:
-    for filename in glob.glob('media/low_res/{}/*'.format(gesture)):
+    for filename in glob.glob('media/low_res_gestures/{}/*'.format(gesture)):
 
         # Load the jpg file into a numpy array
         image = face_recognition.load_image_file(filename)
@@ -50,3 +53,6 @@ with open('./datasets/{}_low_res_gestures.csv'.format(gesture),'w') as file:
                 file.write(",{},{}".format( ((x-min_x) / (max_x-min_x)) , ((y-min_y) / (max_y - min_y))))
             
             file.write("\n")
+            
+end = time.time()
+print(end - start)
