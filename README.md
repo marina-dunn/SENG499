@@ -2,7 +2,12 @@
 The repository to hold the code for the SENG 499 Capstone Project.
 https://github.com/marina-dunn/SENG499
 
-face-recognition installation:
+## Starting the web app
+
+npm install
+npm start
+
+## Face-recognition installation:
 -Python3
 -pip3
 -cmake
